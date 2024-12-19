@@ -2,29 +2,22 @@ package com.example.User.api.student.service.impl;
 
 import com.example.User.api.student.Dao.UserRepository;
 import com.example.User.api.common.commonresponse.CommonAPIDataResponse;
+import com.example.User.api.student.model.BankMaster;
 import com.example.User.api.student.model.request.*;
 import com.example.User.api.student.model.response.*;
-import com.example.User.database.ExcelData;
 import com.example.User.database.User;
 import com.example.User.api.student.service.UserService;
 import com.example.User.kafka.producer.KafkaProducerSend;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -120,6 +113,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
 
+
+
 //        GetAllUserRequest getAllUserRequest=new GetAllUserRequest();
 //        List<User> userss = userRepository.findAllWithFilter(getAllUserRequest);
 //
@@ -204,5 +199,48 @@ public class UserServiceImpl implements UserService {
         response.setMessage("Excel data send successfully");
         return response;
     }
-
+    @Override
+    public UpdateDisplayOrderResponse updateDisplayOrder(UpdateDisplayOrderRequest updateDisplayOrderRequest) {
+/*        UpdateDisplayOrderResponse updateDisplayOrderResponse = new UpdateDisplayOrderResponse();
+        Update updatedBankMaster = new Update();
+        Map<String,String> data= updateDisplayOrderRequest.getData();
+        data.forEach((key,value)->{
+        List<BankMaster> bankMasterList = bankMasterQueryDao
+                .getAllBankMasterList(updateDisplayOrderRequest.getCompany_id(),null,null,null,null,null,key,null,updateDisplayOrderRequest.getIntegerationType(),null);
+            updatedBankMaster.set("display_order",value);
+        });
+*/
+        UpdateDisplayOrderResponse updateDisplayOrderResponse = new UpdateDisplayOrderResponse();
+        Map<String, Integer> data = updateDisplayOrderRequest.getData();
+        if (data == null || data.isEmpty()) {
+            updateDisplayOrderResponse.setCheckValidationFailed(true);
+            updateDisplayOrderResponse.setValidationMessage("INVALID_DATA: Data map is null or empty.");
+            return updateDisplayOrderResponse;
+        }
+        List<String> keyList = new ArrayList<>(data.keySet());
+        List<BankMaster> bankMasterList = userRepository.getBankMasterListWithIntegerationType("1",null, null, null, null,updateDisplayOrderRequest.getIntegration_type());
+        if (bankMasterList == null || bankMasterList.isEmpty()) {
+            updateDisplayOrderResponse.setMessage("NO_BANK_RECORDS_FOUND");
+            return updateDisplayOrderResponse;
+        }
+        Integer nextDisplayOrder= Collections.max(data.values()) + 1;
+//        AtomicInteger nextDisplayOrder = new AtomicInteger(Collections.max(data.values()) + 1);
+//        bankMasterList.forEach(bankMaster -> {
+        for (BankMaster bankMaster : bankMasterList) {
+            Update updatedBankMaster = new Update();
+            if(keyList.contains(bankMaster.getBankCode()) || data == null || data.isEmpty()){
+                updatedBankMaster.set("display_order",data.get(bankMaster.getBankCode()));
+            }else{
+                updatedBankMaster.set("display_order",nextDisplayOrder++);
+            }
+            long updateStatus = userRepository.updateBankMaster(bankMaster.getId(),updatedBankMaster); // Persist changes to the database
+            if (updateStatus == 0) {
+                updateDisplayOrderResponse.setCheckValidationFailed(true);
+                updateDisplayOrderResponse.setValidationMessage("UPDATE_DISPLAY_ORDER_FAILED_FOR_THIS_BANK_CODE_"+bankMaster.getBankCode());
+                return updateDisplayOrderResponse;
+            }
+        };
+        updateDisplayOrderResponse.setMessage("BANK_DISPLAY_ORDERS_UPDATED_SUCCESSFULLY");
+        return updateDisplayOrderResponse;
+    }
 }

@@ -5,6 +5,7 @@ import com.example.User.api.student.model.request.*;
 import com.example.User.constant.APIRequestURL;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,5 +63,10 @@ public class UserController {
     @PostMapping(APIRequestURL.STUDENT_POST_UPLOAD_FILE_API)
     public ResponseEntity<JsonNode> uploadFile(@ModelAttribute UploadFileRequest uploadRequest) {
         return userHandler.uploadFile(uploadRequest);
+    }
+
+    @PutMapping("banks")
+    public ResponseEntity<JsonNode> updateDisplayOrder(@RequestHeader HttpHeaders headers, @RequestBody UpdateDisplayOrderRequest updateDisplayOrderRequest) {
+        return userHandler.updateDisplayOrder( updateDisplayOrderRequest);
     }
 }

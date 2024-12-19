@@ -2,10 +2,7 @@ package com.example.User.api.student.handler;
 
 import com.example.User.api.common.commonresponse.CommonAPIDataResponse;
 import com.example.User.api.student.model.request.*;
-import com.example.User.api.student.model.response.GetAllUserResponse;
-import com.example.User.api.student.model.response.GetUserResponse;
-import com.example.User.api.student.model.response.SaveUserResponse;
-import com.example.User.api.student.model.response.UploadFileResponse;
+import com.example.User.api.student.model.response.*;
 import com.example.User.api.student.service.UserService;
 import com.example.User.utils.Utils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -82,6 +79,17 @@ public class UserHandler {
 
         // Generate a JSON response using a utility method
         return Utils.getJsonNodeResponseEntity(uploadFileResponse);
+    }
+
+    public ResponseEntity<JsonNode> updateDisplayOrder(UpdateDisplayOrderRequest displayOrderRequest) {
+
+//        HeaderProcessingHelper.setRequestHeaders(displayOrderRequest, headers);
+
+//        if (displayOrderRequest.checkBadRequest()) {
+//            return new ResponseEntity<>(Utils.generateErrorResponse("BAD_REQUEST"), HttpStatus.OK);
+//        }
+        UpdateDisplayOrderResponse updateDisplayOrderResponse = userService.updateDisplayOrder(displayOrderRequest);
+        return Utils.getJsonNodeResponseEntity(updateDisplayOrderResponse);
     }
 
 

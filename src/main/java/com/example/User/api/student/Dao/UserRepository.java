@@ -1,5 +1,6 @@
 package com.example.User.api.student.Dao;
 
+import com.example.User.api.student.model.BankMaster;
 import com.example.User.database.User;
 import com.example.User.api.student.model.request.GetAllUserRequest;
 import org.springframework.data.mongodb.core.query.Update;
@@ -14,4 +15,8 @@ public interface UserRepository {
     List<User> findAllWithFilter(GetAllUserRequest getAllUserRequest);
 User findWithRollNumber(String rollNumber);
 void deleteNotInList(List<String> rollNumberList);
+
+    List<BankMaster> getBankMasterListWithIntegerationType(String companyId, String searchKeyword, Integer skip, Integer limit, String sorting, Integer integerationType);
+    long updateBankMaster(String id, Update updatedBankMaster);
+
 }

@@ -2,10 +2,7 @@ package com.example.User.api.student.service;
 
 import com.example.User.api.common.commonresponse.CommonAPIDataResponse;
 import com.example.User.api.student.model.request.*;
-import com.example.User.api.student.model.response.GetAllUserResponse;
-import com.example.User.api.student.model.response.GetUserResponse;
-import com.example.User.api.student.model.response.SaveUserResponse;
-import com.example.User.api.student.model.response.UploadFileResponse;
+import com.example.User.api.student.model.response.*;
 
 public interface UserService{
     SaveUserResponse saveUserResponse(SaveUserRequest saveUserRequest);
@@ -14,6 +11,7 @@ public interface UserService{
     CommonAPIDataResponse deleteUserResponse(GetUserRequest UserRequest);
     CommonAPIDataResponse updateUserResponse(UpdateUserRequest UserRequest);
     UploadFileResponse processUpload(UploadFileRequest uploadExcelFileRequest);
+    UpdateDisplayOrderResponse updateDisplayOrder(UpdateDisplayOrderRequest updateDisplayOrderRequest);
 }
 
 
