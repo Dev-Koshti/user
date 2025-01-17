@@ -1,5 +1,6 @@
 package com.example.User;
 
+import com.example.User.dummes.CustomBinaryFieldCodec;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.IsoType;
 import com.solab.iso8583.MessageFactory;
@@ -16,13 +17,13 @@ public class ISO8583IntegrationExample {
     public static void main(String[] args) {
         try {
             // Create a new MessageFactory
-            MessageFactory messageFactory = new MessageFactory();
+            MessageFactory<IsoMessage> messageFactory = new MessageFactory<>();
             messageFactory.setUseBinaryMessages(true); // Use binary messages for efficiency
             messageFactory.setAssignDate(true);
             messageFactory.setTraceNumberGenerator(new SimpleTraceGenerator((int) (System.currentTimeMillis() % 100000)));
 
             // Define the custom field (if needed) - Example: Field 48
-//            messageFactory.setCustomField(48, new CustomBinaryFieldCodec());
+            messageFactory.setCustomField(48, new CustomBinaryFieldCodec());
 
             // Create a new ISO 8583 message (Sale Transaction)
             IsoMessage saleMessage = messageFactory.newMessage(0x200);

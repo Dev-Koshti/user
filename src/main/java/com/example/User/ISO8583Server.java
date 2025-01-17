@@ -1,8 +1,13 @@
 package com.example.User;
 
+import com.solab.iso8583.IsoMessage;
+import com.solab.iso8583.IsoType;
+import com.solab.iso8583.MessageFactory;
+import com.solab.iso8583.parse.ConfigParser;
+
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
+import java.text.ParseException;
 
 public class ISO8583Server {
 
@@ -13,13 +18,17 @@ public class ISO8583Server {
 
             System.out.println("Server started and waiting for connections...");
 
+            // Initialize MessageFactory
+            MessageFactory<IsoMessage> messageFactory = ConfigParser.createFromClasspathConfig("fields.xml");
+            messageFactory.setUseBinaryMessages(true);
+//            messageFactory.setConfigPath("/fields.xml"); // Ensure this path is correct
+
             while (true) {
-                // Accept new client connections
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected: " + clientSocket.getInetAddress());
 
-                // Handle client communication in a separate thread
-                new Thread(new ClientHandler(clientSocket)).start();
+                // Pass the initialized messageFactory to ClientHandler
+                new Thread(new ClientHandler(clientSocket, messageFactory)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,35 +37,51 @@ public class ISO8583Server {
 
     static class ClientHandler implements Runnable {
         private Socket socket;
+        private MessageFactory<IsoMessage> messageFactory;
 
-        public ClientHandler(Socket socket) {
+        public ClientHandler(Socket socket, MessageFactory<IsoMessage> messageFactory) {
             this.socket = socket;
+            this.messageFactory = messageFactory;
         }
 
         @Override
         public void run() {
-            try {
-                InputStream inputStream = socket.getInputStream();
+            try (InputStream inputStream = socket.getInputStream();
+                 OutputStream outputStream = socket.getOutputStream()) {
+
                 byte[] receivedData = new byte[4096];
                 int bytesRead = inputStream.read(receivedData);
 
                 if (bytesRead > 0) {
-                    // Log the raw received data
                     System.out.println("Received ISO 8583 message from client.");
-                    System.out.println("Message received (raw bytes): " + Arrays.toString(receivedData));
+                    try {
+                        IsoMessage receivedMessage = messageFactory.parseMessage(receivedData, 0);
+                        if (receivedMessage != null) {
+                            System.out.println("Parsed ISO 8583 Message: " + receivedMessage.debugString());
 
-                    // Process the message (e.g., parse as ISO 8583)
-                    // Send a response back to the client
-                    OutputStream outputStream = socket.getOutputStream();
-                    outputStream.write("Response sent to client.".getBytes());
-                    outputStream.flush();
+                            // Create and send response message
+                            IsoMessage responseMessage = messageFactory.newMessage(0x4B0); // Response MTI
+                            responseMessage.setValue(39, "00", IsoType.NUMERIC, 2); // Response code
+                            outputStream.write(responseMessage.writeData());
+                            outputStream.flush();
+                        } else {
+                            System.err.println("Failed to parse ISO 8583 message.");
+                        }
+                    } catch (ParseException e) {
+                        System.err.println("Error parsing ISO 8583 message: " + e.getMessage());
+                    }
                 } else {
                     System.out.println("No data received from client.");
                 }
-
-                socket.close(); // Close the client connection after processing
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                    System.out.println("Connection closed with client.");
+                } catch (IOException e) {
+                    System.err.println("Error closing connection: " + e.getMessage());
+                }
             }
         }
     }

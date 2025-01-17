@@ -15,6 +15,8 @@ import java.time.Instant;
 @SuperBuilder
 public class CommonFieldModel {
 
+    @Field("company_id")
+    public String companyId = null;
 
     @Field("is_active")
     @Builder.Default

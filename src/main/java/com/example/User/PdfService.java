@@ -47,7 +47,6 @@ public class PdfService {
         // Create a table with 3 columns
         PdfPTable table = new PdfPTable(3);
         table.setWidthPercentage(100); // Table width as a percentage of the page width
-
         // Create a merged cell
         PdfPCell mergedCell = new PdfPCell(new Paragraph("Centered Cell"));
         mergedCell.setColspan(3); // Merge 3 columns
