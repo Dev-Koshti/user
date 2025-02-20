@@ -8,4 +8,6 @@ public interface APIRequestURL {
     String MFA_CONFIG_POST_DELETE_GET_API = "mfa_configs/{id}";
 
     String STUDENT_POST_UPLOAD_FILE_API = "file";
+    String SWITCH_STATE_MACHINE = "switch/{id}";
+
 }

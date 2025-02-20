@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE isopackager SYSTEM "packager.dtd">
+<isopackager>
+    <!-- Message Type Indicator (MTI) -->
+    <isofield id="0" length="4" name="Message Type Indicator" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Bitmap -->
+    <isofield id="1" length="8" name="Bitmap" class="org.jpos.iso.IFB_BITMAP"/>
+
+    <!-- Primary Account Number (PAN) -->
+    <isofield id="2" length="19" name="Primary Account Number" class="org.jpos.iso.IFB_LLNUM"/>
+
+    <!-- Processing Code -->
+    <isofield id="3" length="6" name="Processing Code" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Transaction Amount -->
+    <isofield id="4" length="12" name="Transaction Amount" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Transmission Date & Time -->
+    <isofield id="7" length="10" name="Transmission Date &amp; Time" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Systems Trace Audit Number (STAN) -->
+    <isofield id="11" length="6" name="Systems Trace Audit Number" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Local Transaction Time -->
+    <isofield id="12" length="6" name="Local Transaction Time" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Local Transaction Date -->
+    <isofield id="13" length="4" name="Local Transaction Date" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Expiration Date -->
+    <isofield id="14" length="4" name="Expiration Date" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Merchant Type -->
+    <isofield id="18" length="4" name="Merchant Type" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- POS Entry Mode -->
+    <isofield id="22" length="3" name="POS Entry Mode" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Card Sequence Number -->
+    <isofield id="23" length="3" name="Card Sequence Number" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Network International Identifier (NII) -->
+    <isofield id="24" length="3" name="Network International Identifier" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- POS Condition Code -->
+    <isofield id="25" length="2" name="POS Condition Code" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Acquiring Institution ID Code -->
+    <isofield id="32" length="11" name="Acquiring Institution ID Code" class="org.jpos.iso.IFB_LLNUM"/>
+
+    <!-- Track 2 Data -->
+    <isofield id="35" length="37" name="Track 2 Data" class="org.jpos.iso.IFB_LLNUM"/>
+
+    <!-- Retrieval Reference Number -->
+    <isofield id="37" length="12" name="Retrieval Reference Number" class="org.jpos.iso.IFB_ALPHANUMERIC"/>
+
+    <!-- Authorization Identification Response -->
+    <isofield id="38" length="6" name="Authorization Identification Response" class="org.jpos.iso.IFB_ALPHANUMERIC"/>
+
+    <!-- Response Code -->
+    <isofield id="39" length="2" name="Response Code" class="org.jpos.iso.IFB_ALPHANUMERIC"/>
+
+    <!-- Terminal ID -->
+    <isofield id="41" length="8" name="Terminal ID" class="org.jpos.iso.IFB_ALPHANUMERIC"/>
+
+    <!-- Merchant ID -->
+    <isofield id="42" length="15" name="Merchant ID" class="org.jpos.iso.IFB_ALPHANUMERIC"/>
+
+    <!-- Currency Code -->
+    <isofield id="49" length="3" name="Currency Code" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Additional Data (Private) -->
+    <isofield id="48" length="999" name="Additional Data" class="org.jpos.iso.IFB_LLLCHAR"/>
+
+    <!-- Network Management Information Code -->
+    <isofield id="70" length="3" name="Network Management Information Code" class="org.jpos.iso.IFB_NUMERIC"/>
+
+    <!-- Reserved Fields -->
+    <isofield id="90" length="42" name="Original Data Elements" class="org.jpos.iso.IFB_LLNUM"/>
+</isopackager>

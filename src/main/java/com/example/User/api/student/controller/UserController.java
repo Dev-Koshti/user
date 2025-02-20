@@ -3,20 +3,24 @@ package com.example.User.api.student.controller;
 import com.example.User.api.student.handler.UserHandler;
 import com.example.User.api.student.model.request.*;
 import com.example.User.constant.APIRequestURL;
+import com.example.User.statemachine.StateMachineAccessor;
+import com.example.User.statemachine.states.AppEvents;
+import com.example.User.statemachine.states.AppState;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 //@RequestMapping("${app.baseurl}")
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UserHandler userHandler;
+    private final UserHandler userHandler;
 
+    private final StateMachineAccessor stateMachineAccessor;
 
     @PostMapping(APIRequestURL.STUDENT_POST_PUT_GET_ALL_API)
     public ResponseEntity<JsonNode> addUser(@RequestBody SaveUserRequest saveUserRequest) {
@@ -33,12 +37,12 @@ public class UserController {
 
 
     @GetMapping(APIRequestURL.STUDENT_POST_PUT_GET_ALL_API)
-    public ResponseEntity<JsonNode> getAllUser(@ModelAttribute GetAllUserRequest getUserRequest){
+    public ResponseEntity<JsonNode> getAllUser(@ModelAttribute GetAllUserRequest getUserRequest) {
         return userHandler.getAllUser(getUserRequest);
     }
 
     @GetMapping(APIRequestURL.STUDENT_POST_DELETE_GET_API)
-    public ResponseEntity<JsonNode> getUser(@PathVariable String id,@ModelAttribute GetUserRequest getUserRequest){
+    public ResponseEntity<JsonNode> getUser(@PathVariable String id, @ModelAttribute GetUserRequest getUserRequest) {
         getUserRequest.setId(id);
         return userHandler.getUser(getUserRequest);
     }
@@ -55,7 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping(APIRequestURL.STUDENT_POST_DELETE_GET_API)
-    public ResponseEntity<JsonNode> deleteUser(@PathVariable String id,@ModelAttribute GetUserRequest deleteUserRequest) {
+    public ResponseEntity<JsonNode> deleteUser(@PathVariable String id, @ModelAttribute GetUserRequest deleteUserRequest) {
         deleteUserRequest.setId(id);
         return userHandler.deleteUser(deleteUserRequest);
     }
@@ -67,6 +71,20 @@ public class UserController {
 
     @PutMapping("banks")
     public ResponseEntity<JsonNode> updateDisplayOrder(@RequestHeader HttpHeaders headers, @RequestBody UpdateDisplayOrderRequest updateDisplayOrderRequest) {
-        return userHandler.updateDisplayOrder( updateDisplayOrderRequest);
+        return userHandler.updateDisplayOrder(updateDisplayOrderRequest);
+    }
+
+    @GetMapping(APIRequestURL.SWITCH_STATE_MACHINE)
+    public String performSwitch(@PathVariable String id) {
+        StateMachine<AppState, AppEvents> stateMachine = stateMachineAccessor.getStateMachine();
+        if (id.equals("on")) {
+            stateMachine.sendEvent(AppEvents.TURN_ON);
+            System.out.println(stateMachine.getState().getId().name());
+            return stateMachine.getState().getId().name();
+        } else if (id.equals("off")) {
+            stateMachine.sendEvent(AppEvents.TURN_OFF);
+            return stateMachine.getState().getId().name();
+        }
+        return stateMachine.getState().getId().name();
     }
 }
