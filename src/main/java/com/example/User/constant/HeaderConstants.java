@@ -10,6 +10,7 @@ public interface HeaderConstants {
 
     /*Spring security*/
     String TOKEN_USER_ID = "token_user_id";
+    String TOKEN_USER_TYPE = "token_user_type";
 
     String SIGNATURE = "signature";
 }
