@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -195,16 +194,6 @@ public class Utils {
             return Criteria.where(fieldName).gte(0L).lte(startDate);
         } else {
             return Criteria.where(fieldName).gte(0L).lte(endDate);
-        }
-    }
-
-    public static String convertHashMapToJsonString(Map<String, Object> objectHashMap) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(objectHashMap);
-        } catch (Exception ex) {
-            Logger.error(" Error At Conversion of HashMap To Json String Method : " + ExceptionUtils.getStackTrace(ex));
-            return null;
         }
     }
 

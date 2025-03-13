@@ -206,8 +206,6 @@ public interface AppConstants {
     public static final String ROLE_MERCHANT = "ROLE_MERCHANT";
     public static final String ROLE_STAFF = "ROLE_STAFF";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    String ROLE_AGENT = "ROLE_AGENT";
-
 
     public static final String ROLE_MERCHANT_AS_AGENT = "ROLE_MERCHANT_AS_AGENT";
     public static final String AUTH_TOKEN_KEY = "Token";
